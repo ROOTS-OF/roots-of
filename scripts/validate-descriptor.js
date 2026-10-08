@@ -45,8 +45,8 @@ function req(obj, keys, ctx) {
 
 req(d, ['contractVersion', 'artifact', 'source', 'lifecycle', 'supportedTarget', 'acceptanceReceipt'], 'descriptor');
 
-if (d.contractVersion !== '1.0.0') {
-  fail(`contractVersion is "${d.contractVersion}", expected "1.0.0"`);
+if (d.contractVersion !== '1.1.0') {
+  fail(`contractVersion is "${d.contractVersion}", expected "1.1.0"`);
 }
 
 req(d.artifact, ['type', 'platform', 'architecture', 'digest'], 'artifact');
@@ -83,5 +83,5 @@ if (d.isolation) {
   }
 }
 
-console.log(`PASS ${path} validates against rootfs-instance contract v1.0.0`);
+console.log(`PASS ${path} validates against rootfs-instance contract v1.1.0`);
 process.exit(0);
