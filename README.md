@@ -30,9 +30,12 @@ live instead.
 
 ## Real monorepo instances built on this pattern
 
-- `Roots-Of/MERIDIAN-0QQ` — MERIDIAN_Blue's own 2D agentic-system rootfs
-  (not yet scaffolded as of 2026-10-07; tracked in
-  `PFM___/ROOTS-OF-PROGRESS.md` in the PlayFieldMultiplier office).
+- `Roots-Of/MERIDIAN-0QQ` — MERIDIAN_Blue's own 2D agentic-system rootfs.
+  Cast-subfolder structure (`AS/MERIDIAN-OTTOBOT/AS/PFM___/AS/LeagueOS/_`)
+  scaffolded 2026-10-08; tracked in `PFM___/ROOTS-OF-PROGRESS.md` in the
+  PlayFieldMultiplier office. Real next step there: a versioned
+  rootfs-instance descriptor/lifecycle and a real Red/Blue isolation
+  contract — flagged by Meridian Red's review, not yet built.
 - Qadence Tessel's own rootfs — planned, not yet started, expected to
   adopt and contribute back to whatever pattern gets set down here.
 
