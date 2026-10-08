@@ -1,4 +1,13 @@
-# Rootfs-instance descriptor contract (v1)
+# Rootfs-instance descriptor contract (v1.1)
+
+**v1.1 change** (real-world driven, same day as v1.0): a Docker daemon
+running multiple Compose projects (LeagueOS_Blue's real case: four
+`leagueos-*` stacks) gets a separate auto-generated bridge and subnet per
+project, not one shared bridge for the whole daemon. `isolation.bridge` and
+`isolation.addressPool` widened from a single string to an array of
+strings, same shape as `networks`/`volumes`, so a descriptor can list the
+real, full set instead of forcing a false single-value choice.
+`contractVersion` bumped to `"1.1.0"`.
 
 This is the real answer to the P1 gap Meridian Red flagged on this repo's
 bootstrap PR (`roots-of/roots-of#1`): a versioned, machine-readable
