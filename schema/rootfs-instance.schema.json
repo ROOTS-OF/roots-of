@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://roots-of.github.io/roots-of/schema/rootfs-instance.schema.json",
+  "title": "Rootfs instance descriptor (v1)",
+  "type": "object",
+  "required": ["contractVersion", "artifact", "source", "lifecycle", "supportedTarget", "acceptanceReceipt"],
+  "properties": {
+    "contractVersion": { "const": "1.0.0" },
+    "artifact": {
+      "type": "object",
+      "required": ["type", "platform", "architecture", "digest"],
+      "properties": {
+        "type": {
+          "enum": ["wsl-export", "oci-image", "debootstrap", "mkosi", "distrobuilder", "packer"]
+        },
+        "platform": { "type": "string" },
+        "architecture": { "type": "string" },
+        "digest": { "type": ["string", "null"] }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["recipe", "provenance"],
+      "properties": {
+        "recipe": { "type": "string" },
+        "provenance": { "type": "string" }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": ["build", "export", "restore", "validate"],
+      "properties": {
+        "build": { "type": ["string", "null"] },
+        "export": { "type": ["string", "null"] },
+        "restore": { "type": ["string", "null"] },
+        "validate": { "type": ["string", "null"] }
+      }
+    },
+    "supportedTarget": { "type": "string" },
+    "acceptanceReceipt": {
+      "type": "object",
+      "required": ["command", "lastRunAt", "lastResult"],
+      "properties": {
+        "command": { "type": "string" },
+        "lastRunAt": { "type": ["string", "null"], "format": "date-time" },
+        "lastResult": { "enum": ["PASS", "FAIL", "NOT_YET_RUN"] }
+      }
+    },
+    "isolation": {
+      "type": "object",
+      "required": [
+        "team", "dockerDataRoot", "bridge", "addressPool", "networks",
+        "volumes", "composeProject", "hostPorts", "bindMounts"
+      ],
+      "properties": {
+        "team": { "enum": ["red", "blue", "shared"] },
+        "dockerDataRoot": { "type": "string" },
+        "bridge": { "type": "string" },
+        "addressPool": { "type": "string" },
+        "networks": { "type": "array", "items": { "type": "string" } },
+        "volumes": { "type": "array", "items": { "type": "string" } },
+        "composeProject": { "type": "string" },
+        "hostPorts": { "type": "array", "items": { "type": "integer" } },
+        "bindMounts": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}
