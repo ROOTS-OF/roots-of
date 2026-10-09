@@ -1,4 +1,14 @@
-# Rootfs-instance descriptor contract (v1.1)
+# Rootfs-instance descriptor contract (v1.2)
+
+**v1.2 change** (real-world driven, Meridian Red's own runtime-factory
+input): Red built and verified a real host-runtime guard
+(`LeagueOS-Runtime-SleepGuard`) that inhibits Windows sleep only while its
+dedicated distro has running containers — exposing a real gap: isolation
+declares WHERE an instance runs, but the contract had no way to declare an
+instance's required host-runtime guard, its predicate, its
+install/teardown/status commands, or a non-secret status receipt. New
+optional top-level `hostRuntimeGuard` object added (see below).
+`contractVersion` bumped to `"1.2.0"`.
 
 **v1.1 change** (real-world driven, same day as v1.0): a Docker daemon
 running multiple Compose projects (LeagueOS_Blue's real case: four
@@ -7,7 +17,6 @@ project, not one shared bridge for the whole daemon. `isolation.bridge` and
 `isolation.addressPool` widened from a single string to an array of
 strings, same shape as `networks`/`volumes`, so a descriptor can list the
 real, full set instead of forcing a false single-value choice.
-`contractVersion` bumped to `"1.1.0"`.
 
 This is the real answer to the P1 gap Meridian Red flagged on this repo's
 bootstrap PR (`roots-of/roots-of#1`): a versioned, machine-readable
@@ -57,6 +66,33 @@ against it. Required top-level fields:
   the literal string `"unknown — needs verification"`, never a guessed or
   fabricated value — a wrong guess here is worse than an honest unknown,
   because it defeats the entire point of mechanical collision detection.
+
+## Host runtime guard (optional)
+
+- **`hostRuntimeGuard`** — present only when the instance has a real,
+  installed mechanism that inhibits the HOST machine's sleep state while the
+  instance has active work, so a long-running container doesn't get killed
+  by the host going to sleep. Required sub-fields:
+  - **`predicate`** — real, human-readable description of the exact
+    condition that activates the guard (e.g. "the dedicated distro has one
+    or more running containers"). Never a vague "when busy."
+  - **`action`** — pinned by the schema to the exact string
+    `"inhibit host system sleep while predicate holds; never change the
+    user's global power plan"`. This is the real safety guarantee, not
+    prose — a descriptor claiming `hostRuntimeGuard` is asserting this
+    exact semantic, never a broader or different one (never, for example,
+    forcing the machine's power plan itself to "High Performance").
+  - **`install`** / **`teardown`** / **`status`** — real commands (or a
+    short description of the real installation mechanism, e.g. "Windows
+    Scheduled Task, hidden, runs at logon") for setting the guard up,
+    removing it, and checking whether it's currently active.
+  - **`receipt`** — `{ pathOrCommand, nonSecret }`. `nonSecret` is pinned
+    `true` by the schema — a `hostRuntimeGuard` receipt must be checkable
+    without exposing any credential, by construction, not by convention.
+- Generic by design — a non-Windows instance can declare the same shape
+  with its own real `install`/`teardown`/`status` mechanism (e.g.
+  `systemd-inhibit` on Linux); nothing here is Windows-specific except the
+  real example above.
 
 ## Non-mutating validation command
 

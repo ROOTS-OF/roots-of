@@ -45,8 +45,8 @@ function req(obj, keys, ctx) {
 
 req(d, ['contractVersion', 'artifact', 'source', 'lifecycle', 'supportedTarget', 'acceptanceReceipt'], 'descriptor');
 
-if (d.contractVersion !== '1.1.0') {
-  fail(`contractVersion is "${d.contractVersion}", expected "1.1.0"`);
+if (d.contractVersion !== '1.2.0') {
+  fail(`contractVersion is "${d.contractVersion}", expected "1.2.0"`);
 }
 
 req(d.artifact, ['type', 'platform', 'architecture', 'digest'], 'artifact');
@@ -83,5 +83,21 @@ if (d.isolation) {
   }
 }
 
-console.log(`PASS ${path} validates against rootfs-instance contract v1.1.0`);
+if (d.hostRuntimeGuard) {
+  req(
+    d.hostRuntimeGuard,
+    ['predicate', 'action', 'install', 'teardown', 'status', 'receipt'],
+    'hostRuntimeGuard'
+  );
+  const expectedAction = "inhibit host system sleep while predicate holds; never change the user's global power plan";
+  if (d.hostRuntimeGuard.action !== expectedAction) {
+    fail(`hostRuntimeGuard.action must be exactly "${expectedAction}"`);
+  }
+  req(d.hostRuntimeGuard.receipt, ['pathOrCommand', 'nonSecret'], 'hostRuntimeGuard.receipt');
+  if (d.hostRuntimeGuard.receipt.nonSecret !== true) {
+    fail('hostRuntimeGuard.receipt.nonSecret must be true');
+  }
+}
+
+console.log(`PASS ${path} validates against rootfs-instance contract v1.2.0`);
 process.exit(0);
